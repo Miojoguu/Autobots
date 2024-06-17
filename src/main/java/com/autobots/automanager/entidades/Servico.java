@@ -14,12 +14,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Telefone extends RepresentationModel<Telefone> {
-	@Id()
+public class Servico extends RepresentationModel<Servico> {
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(nullable = false, unique = true)
+	private String nome;
 	@Column(nullable = false)
-	private String ddd;
-	@Column(nullable = false)
-	private String numero;
+	private double valor;
+	@Column
+	private String descricao;
 }

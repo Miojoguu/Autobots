@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Endereco;
-import com.autobots.automanager.repositorios.EnderecoRepositorio;
-import com.autobots.automanager.modelos.endereco.AdicionadorLinkEndereco;
-import com.autobots.automanager.modelos.endereco.EnderecoAtualizador;
+import com.autobots.automanager.modelo.endereco.AdicionadorLinkEndereco;
+import com.autobots.automanager.modelo.endereco.EnderecoAtualizador;
+import com.autobots.automanager.repositorios.RepositorioEndereco;
 
 @RestController
 @RequestMapping("/endereco")
 public class EnderecoControle {
 	@Autowired
-	private EnderecoRepositorio repositorio;
+	private RepositorioEndereco repositorio;
 	@Autowired
 	private AdicionadorLinkEndereco adicionadorLinkEndereco;
 

@@ -9,5 +9,4 @@ class AutomanagerApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

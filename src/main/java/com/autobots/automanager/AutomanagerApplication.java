@@ -1,108 +1,321 @@
 package com.autobots.automanager;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Component;
 
-import com.autobots.automanager.entidades.Cliente;
+import com.autobots.automanager.entidades.CredencialUsuarioSenha;
 import com.autobots.automanager.entidades.Documento;
+import com.autobots.automanager.entidades.Email;
+import com.autobots.automanager.entidades.Empresa;
 import com.autobots.automanager.entidades.Endereco;
+import com.autobots.automanager.entidades.Mercadoria;
+import com.autobots.automanager.entidades.Servico;
 import com.autobots.automanager.entidades.Telefone;
-import com.autobots.automanager.repositorios.ClienteRepositorio;
-import com.autobots.automanager.repositorios.DocumentoRepositorio;
-import com.autobots.automanager.repositorios.EnderecoRepositorio;
-import com.autobots.automanager.repositorios.TelefoneRepositorio;
+import com.autobots.automanager.entidades.Usuario;
+import com.autobots.automanager.entidades.Veiculo;
+import com.autobots.automanager.entidades.Venda;
+import com.autobots.automanager.enumeracoes.PerfilUsuario;
+import com.autobots.automanager.enumeracoes.TipoDocumento;
+import com.autobots.automanager.enumeracoes.TipoVeiculo;
+import com.autobots.automanager.repositorios.RepositorioDocumento;
+import com.autobots.automanager.repositorios.RepositorioEmail;
+import com.autobots.automanager.repositorios.RepositorioEmpresa;
+import com.autobots.automanager.repositorios.RepositorioEndereco;
+import com.autobots.automanager.repositorios.RepositorioUsuario;
+import com.autobots.automanager.repositorios.RepositorioVeiculo;
+import com.autobots.automanager.repositorios.RepositorioVenda;
+import com.autobots.automanager.repositorios.RepositorioMercadoria;
+import com.autobots.automanager.repositorios.RepositorioServico;
+import com.autobots.automanager.repositorios.RepositorioTelefone;
+
+
 
 @SpringBootApplication
-public class AutomanagerApplication {
+public class AutomanagerApplication implements CommandLineRunner {
+
+	@Autowired
+	private RepositorioEmpresa repositorioEmpresa;
+	@Autowired
+	private RepositorioUsuario repositorioUsuario;
+	@Autowired
+	private RepositorioVeiculo repositorioVeiculo;
+	@Autowired
+	private RepositorioVenda repositorioVenda;
+	@Autowired
+	private RepositorioMercadoria repositorioMercadoria;
+	@Autowired
+	private RepositorioServico repositorioServico;
+	@Autowired
+	private RepositorioDocumento repositorioDocumento;
+	@Autowired
+	private RepositorioEmail repositorioEmail;
+	@Autowired
+	private RepositorioEndereco repositorioEndereco;
+	@Autowired
+	private RepositorioTelefone repositorioTelefone;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AutomanagerApplication.class, args);
 	}
 
-	@Component
-	public static class Runner implements ApplicationRunner {
+	@Override
+	public void run(String... args) throws Exception {
 
-		@Autowired
-		public ClienteRepositorio repositorio_cliente;
+		Empresa empresa = new Empresa();
+		empresa.setRazaoSocial("Car service toyota ltda");
+		empresa.setNomeFantasia("Car service manutenção veicular");
+		empresa.setCadastro(new Date());
 
-		@Autowired
-		public DocumentoRepositorio repositorio_documento;
+		Endereco enderecoEmpresa = new Endereco();
+		enderecoEmpresa.setEstado("São Paulo");
+		enderecoEmpresa.setCidade("São Paulo");
+		enderecoEmpresa.setBairro("Centro");
+		enderecoEmpresa.setRua("Av. São João");
+		enderecoEmpresa.setNumero("00");
+		enderecoEmpresa.setCodigoPostal("01035-000");
 
-		@Autowired
-		public EnderecoRepositorio repositorio_endereco;
+		empresa.setEndereco(enderecoEmpresa);
 
-		@Autowired
-		public TelefoneRepositorio repositorio_telefone;
+		Telefone telefoneEmpresa = new Telefone();
+		telefoneEmpresa.setDdd("011");
+		telefoneEmpresa.setNumero("986454527");
 
-		@Override
-		public void run(ApplicationArguments args) throws Exception {
-			Calendar calendario = Calendar.getInstance();
-			calendario.set(2002, 05, 15);
+		empresa.getTelefones().add(telefoneEmpresa);
 
-			Cliente cliente = new Cliente();
-			cliente.setNome("Pedro Alcântara de Bragança e Bourbon");
-			cliente.setDataCadastro(Calendar.getInstance().getTime());
-			cliente.setDataNascimento(calendario.getTime());
-			cliente.setNomeSocial("Dom Pedro");
+		Usuario funcionario = new Usuario();
+		funcionario.setNome("Pedro Alcântara de Bragança e Bourbon");
+		funcionario.setNomeSocial("Dom Pedro");
+		funcionario.getPerfis().add(PerfilUsuario.FUNCIONARIO);
 
-			Telefone telefone = new Telefone();
-			telefone.setDdd("21");
-			telefone.setNumero("981234576");
-			cliente.getTelefones().add(telefone);
+		Email emailFuncionario = new Email();
+		emailFuncionario.setEndereco("a@a.com");
 
-			Endereco endereco = new Endereco();
-			endereco.setEstado("Rio de Janeiro");
-			endereco.setCidade("Rio de Janeiro");
-			endereco.setBairro("Copacabana");
-			endereco.setRua("Avenida Atlântica");
-			endereco.setNumero("1702");
-			endereco.setCodigoPostal("22021001");
-			endereco.setInformacoesAdicionais("Hotel Copacabana palace");
-			cliente.setEndereco(endereco);
+		funcionario.getEmails().add(emailFuncionario);
 
-			Documento rg = new Documento();
-			rg.setTipo("RG");
-			rg.setNumero("1500");
+		Endereco enderecoFuncionario = new Endereco();
+		enderecoFuncionario.setEstado("São Paulo");
+		enderecoFuncionario.setCidade("São Paulo");
+		enderecoFuncionario.setBairro("Jardins");
+		enderecoFuncionario.setRua("Av. São Gabriel");
+		enderecoFuncionario.setNumero("00");
+		enderecoFuncionario.setCodigoPostal("01435-001");
 
-			Documento cpf = new Documento();
-			cpf.setTipo("RG");
-			cpf.setNumero("00000000001");
+		funcionario.setEndereco(enderecoFuncionario);
 
-			cliente.getDocumentos().add(rg);
-			cliente.getDocumentos().add(cpf);
+		empresa.getUsuarios().add(funcionario);
 
-			repositorio_cliente.save(cliente);
+		Telefone telefoneFuncionario = new Telefone();
+		telefoneFuncionario.setDdd("011");
+		telefoneFuncionario.setNumero("9854633728");
 
-			// testes de busca
+		funcionario.getTelefones().add(telefoneFuncionario);
 
-			System.out.println("Busca por id");
-			System.out.println(repositorio_cliente.findById(1L).get().getNome());
-			System.out.println(repositorio_documento.findById(1L).get().getNumero());
-			System.out.println(repositorio_endereco.findById(1L).get().getRua());
-			System.out.println(repositorio_telefone.findById(1L).get().getNumero());
+		Documento cpf = new Documento();
+		cpf.setDataEmissao(new Date());
+		cpf.setNumero("856473819229");
+		cpf.setTipo(TipoDocumento.CPF);
 
-			// testes de update
+		funcionario.getDocumentos().add(cpf);
 
-			System.out.println("Update");
-			cliente.setNome("Pedro II");
-			repositorio_cliente.save(cliente);
-			System.out.println(repositorio_cliente.findById(1L).get().getNome());
+		CredencialUsuarioSenha credencialFuncionario = new CredencialUsuarioSenha();
+		credencialFuncionario.setInativo(false);
+		credencialFuncionario.setNomeUsuario("dompedrofuncionario");
+		credencialFuncionario.setSenha("123456");
+		credencialFuncionario.setCriacao(new Date());
+		credencialFuncionario.setUltimoAcesso(new Date());
 
-			// testes de delete
+		funcionario.getCredenciais().add(credencialFuncionario);
 
-			System.out.println("Delete");
-			repositorio_cliente.deleteById(1L);
-			try {
-				System.out.println(repositorio_cliente.findById(1L).get().getNome());
-			} catch (Exception e) {
-				System.out.println("Cliente não encontrado");
-			}
-		}
+		Usuario fornecedor = new Usuario();
+		fornecedor.setNome("Componentes varejo de partes automotivas ltda");
+		fornecedor.setNomeSocial("Loja do carro, vendas de componentes automotivos");
+		fornecedor.getPerfis().add(PerfilUsuario.FORNECEDOR);
+
+		Email emailFornecedor = new Email();
+		emailFornecedor.setEndereco("f@f.com");
+
+		fornecedor.getEmails().add(emailFornecedor);
+
+		CredencialUsuarioSenha credencialFornecedor = new CredencialUsuarioSenha();
+		credencialFornecedor.setInativo(false);
+		credencialFornecedor.setNomeUsuario("dompedrofornecedor");
+		credencialFornecedor.setSenha("123456");
+		credencialFornecedor.setCriacao(new Date());
+		credencialFornecedor.setUltimoAcesso(new Date());
+
+		fornecedor.getCredenciais().add(credencialFornecedor);
+
+		Documento cnpj = new Documento();
+		cnpj.setDataEmissao(new Date());
+		cnpj.setNumero("00014556000100");
+		cnpj.setTipo(TipoDocumento.CNPJ);
+
+		fornecedor.getDocumentos().add(cnpj);
+
+		Endereco enderecoFornecedor = new Endereco();
+		enderecoFornecedor.setEstado("Rio de Janeiro");
+		enderecoFornecedor.setCidade("Rio de Janeiro");
+		enderecoFornecedor.setBairro("Centro");
+		enderecoFornecedor.setRua("Av. República do chile");
+		enderecoFornecedor.setNumero("00");
+		enderecoFornecedor.setCodigoPostal("20031-170");
+
+		fornecedor.setEndereco(enderecoFornecedor);
+
+		empresa.getUsuarios().add(fornecedor);
+		
+		Mercadoria rodaLigaLeve = new Mercadoria();
+		rodaLigaLeve.setCadastro(new Date());
+		rodaLigaLeve.setFabricao(new Date());
+		rodaLigaLeve.setNome("Roda de liga leva modelo toyota etios");
+		rodaLigaLeve.setValidade(new Date());
+		rodaLigaLeve.setQuantidade(30);
+		rodaLigaLeve.setValor(300.0);
+		rodaLigaLeve.setDescricao("Roda de liga leve original de fábrica da toyta para modelos do tipo hatch");
+
+		empresa.getMercadorias().add(rodaLigaLeve);
+
+		fornecedor.getMercadorias().add(rodaLigaLeve);
+
+		Usuario cliente = new Usuario();
+		cliente.setNome("Pedro Alcântara de Bragança e Bourbon");
+		cliente.setNomeSocial("Dom pedro cliente");
+		cliente.getPerfis().add(PerfilUsuario.CLIENTE);
+
+		Email emailCliente = new Email();
+		emailCliente.setEndereco("c@c.com");
+
+		cliente.getEmails().add(emailCliente);
+
+		Documento cpfCliente = new Documento();
+		cpfCliente.setDataEmissao(new Date());
+		cpfCliente.setNumero("12584698533");
+		cpfCliente.setTipo(TipoDocumento.CPF);
+
+		cliente.getDocumentos().add(cpfCliente);
+
+		CredencialUsuarioSenha credencialCliente = new CredencialUsuarioSenha();
+		credencialCliente.setInativo(false);
+		credencialCliente.setNomeUsuario("dompedrocliente");
+		credencialCliente.setSenha("123456");
+		credencialCliente.setCriacao(new Date());
+		credencialCliente.setUltimoAcesso(new Date());
+
+		cliente.getCredenciais().add(credencialCliente);
+
+		Endereco enderecoCliente = new Endereco();
+		enderecoCliente.setEstado("São Paulo");
+		enderecoCliente.setCidade("São José dos Campos");
+		enderecoCliente.setBairro("Centro");
+		enderecoCliente.setRua("Av. Dr. Nelson D'Ávila");
+		enderecoCliente.setNumero("00");
+		enderecoCliente.setCodigoPostal("12245-070");
+
+		cliente.setEndereco(enderecoCliente);
+		
+		Veiculo veiculo = new Veiculo();
+		veiculo.setPlaca("ABC-0000");
+		veiculo.setModelo("corolla-cross");
+		veiculo.setTipo(TipoVeiculo.SUV);
+		veiculo.setProprietario(cliente);
+		
+		cliente.getVeiculos().add(veiculo);
+		
+		empresa.getUsuarios().add(cliente);
+
+		Servico trocaRodas = new Servico();
+		trocaRodas.setDescricao("Troca das rodas do carro por novas");
+		trocaRodas.setNome("Troca de rodas");
+		trocaRodas.setValor(50);
+
+		Servico alinhamento = new Servico();
+		alinhamento.setDescricao("Alinhamento das rodas do carro");
+		alinhamento.setNome("Alinhamento de rodas");
+		alinhamento.setValor(50);
+
+		empresa.getServicos().add(trocaRodas);
+		empresa.getServicos().add(alinhamento);
+
+		Venda venda = new Venda();
+		venda.setCadastro(new Date());
+		venda.setCliente(cliente);
+		venda.getMercadorias().add(rodaLigaLeve);
+		venda.setIdentificacao("1234698745");
+		venda.setFuncionario(funcionario);
+		venda.getServicos().add(trocaRodas);
+		venda.getServicos().add(alinhamento);
+		venda.setVeiculo(veiculo);
+		veiculo.getVendas().add(venda);
+
+		empresa.getVendas().add(venda);
+
+		repositorioEmpresa.save(empresa);
+
+		// Testes de consulta
+
+		System.out.println("Empresa: " + empresa.getNomeFantasia());
+		System.out.println("Funcionário: " + funcionario.getNome());
+		System.out.println("Fornecedor: " + fornecedor.getNome());
+		System.out.println("Cliente: " + cliente.getNome());
+		System.out.println("Mercadoria: " + rodaLigaLeve.getNome());
+		System.out.println("Serviço: " + trocaRodas.getNome());
+		System.out.println("Venda: " + venda.getIdentificacao());
+		System.out.println("Veículo: " + veiculo.getPlaca());
+		System.out.println("Endereço: " + enderecoCliente.getRua());
+		System.out.println("Documento: " + cpfCliente.getNumero());
+		System.out.println("Email: " + emailCliente.getEndereco());
+		System.out.println("Credencial: " + credencialCliente.getNomeUsuario());
+		System.out.println("Telefone: " + telefoneEmpresa.getNumero());
+		
+		// Testes de alteração
+
+		empresa.setNomeFantasia("Oficina do João");
+		funcionario.setNome("João da Silva");
+		fornecedor.setNome("João da Silva");
+		cliente.setNome("João da Silva");
+		rodaLigaLeve.setNome("Roda de liga leve modelo toyota corolla");
+		trocaRodas.setNome("Troca de rodas do carro");
+		alinhamento.setNome("Alinhamento de rodas do carro");
+		venda.setIdentificacao("1234567890");
+		veiculo.setPlaca("ABC-1234");
+		enderecoCliente.setRua("Av. Dr. João D'Ávila");
+		cpfCliente.setNumero("12345678900");
+		emailCliente.setEndereco("Rua João da Silva, 123");
+		telefoneEmpresa.setNumero("12999999999");
+
+		repositorioEmpresa.save(empresa);
+		repositorioUsuario.save(funcionario);
+		repositorioUsuario.save(fornecedor);
+		repositorioUsuario.save(cliente);
+		repositorioMercadoria.save(rodaLigaLeve);
+		repositorioServico.save(trocaRodas);
+		repositorioServico.save(alinhamento);
+		repositorioVenda.save(venda);
+		repositorioVeiculo.save(veiculo);
+		repositorioEndereco.save(enderecoCliente);
+		repositorioDocumento.save(cpfCliente);
+		repositorioEmail.save(emailCliente);
+		repositorioTelefone.save(telefoneEmpresa);
+		
+		// Testes de exclusão
+
+		repositorioEmpresa.delete(empresa);
+		repositorioUsuario.delete(funcionario);
+		repositorioUsuario.delete(fornecedor);
+		repositorioUsuario.delete(cliente);
+		repositorioMercadoria.delete(rodaLigaLeve);
+		repositorioServico.delete(trocaRodas);
+		repositorioServico.delete(alinhamento);
+		repositorioVenda.delete(venda);
+		repositorioVeiculo.delete(veiculo);
+		repositorioEndereco.delete(enderecoCliente);
+		repositorioDocumento.delete(cpfCliente);
+		repositorioEmail.delete(emailCliente);
+		repositorioTelefone.delete(telefoneEmpresa);
+
 	}
 }

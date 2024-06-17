@@ -1,5 +1,7 @@
 package com.autobots.automanager.entidades;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,12 +16,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Telefone extends RepresentationModel<Telefone> {
-	@Id()
+public class Mercadoria extends RepresentationModel<Mercadoria> {
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false)
-	private String ddd;
+	private Date validade;
 	@Column(nullable = false)
-	private String numero;
+	private Date fabricao;
+	@Column(nullable = false)
+	private Date cadastro;
+	@Column(nullable = false)
+	private String nome;
+	@Column(nullable = false)
+	private long quantidade;
+	@Column(nullable = false)
+	private double valor;
+	@Column()
+	private String descricao;
 }
